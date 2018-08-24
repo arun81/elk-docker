@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  rsyslog:
+    build: ./rsyslog-image
+    restart: always
+    ports:
+      - "514:514"
+      - "514:514/udp"
+    volumes:
+      - ./res/rsyslogd.conf:/etc/rsyslogd.conf
+    command: ["rsyslogd", "-n", "-f", "/etc/rsyslogd.conf"]
+
+  logstash:
+    image: "logstash:5.6.11"
+    restart: always
+    volumes:
+      - ./res/logstash.conf:/etc/logstash.conf
+    command: ["-f", "/etc/logstash.conf"]
+
+  elasticsearch:
+    image: elasticsearch
+
+  kibana:
+    image: kibana
+    ports:
+      - 5601:5601
+
